@@ -25,12 +25,17 @@ rcParams["axes.unicode_minus"] = False
 BASE_DIR = Path(__file__).resolve().parent          # .../resume_match_app
 REPO_DIR = BASE_DIR.parent                          # .../resume-match-demo
 
-INDEX_PATH = REPO_DIR / "jobs_index_demo.parquet"
-META_PATH  = REPO_DIR / "skills_meta_demo.json"
+INDEX_PARTS = [
+    REPO_DIR / "jobs_index_demo_part1.parquet",
+    REPO_DIR / "jobs_index_demo_part2.parquet",
+]
+
+META_PATH = REPO_DIR / "skills_meta_demo.json"
+
+st.write("INDEX_PARTS:", [str(p) for p in INDEX_PARTS])
+st.write("META_PATH:", str(META_PATH))
 # RULES_PATH 如果你暂时不用，就先注释；要用再放到仓库里再配
 # RULES_PATH = REPO_DIR / "skill_bundles_rules.csv"
-st.write("INDEX_PATH:", str(INDEX_PATH))
-st.write("META_PATH:", str(META_PATH))
 
 # plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "Arial Unicode MS"]
 # plt.rcParams["axes.unicode_minus"] = False
@@ -598,6 +603,7 @@ if run_btn and resume_text.strip():
             st.write("**缺口（岗位技能-你现有）：**", ", ".join(missing[:25]) if missing else "无")
 else:
     st.info("粘贴简历后点击「开始抽取 + 匹配」。")
+
 
 
 
