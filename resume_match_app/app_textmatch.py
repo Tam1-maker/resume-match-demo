@@ -8,6 +8,19 @@ from rapidfuzz import process, fuzz
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from pathlib import Path
+from matplotlib import font_manager, rcParams
+from pathlib import Path
+
+FONT_PATH = Path(__file__).resolve().parent / "fonts" / "NotoSansCJK-Regular.ttc"
+
+if FONT_PATH.exists():
+    font_manager.fontManager.addfont(str(FONT_PATH))
+    font_prop = font_manager.FontProperties(fname=str(FONT_PATH))
+    rcParams["font.family"] = font_prop.get_name()
+else:
+    rcParams["font.family"] = "DejaVu Sans"  # 兜底
+
+rcParams["axes.unicode_minus"] = False
 
 BASE_DIR = Path(__file__).resolve().parent          # .../resume_match_app
 REPO_DIR = BASE_DIR.parent                          # .../resume-match-demo
@@ -19,8 +32,8 @@ META_PATH  = REPO_DIR / "skills_meta_demo.json"
 st.write("INDEX_PATH:", str(INDEX_PATH))
 st.write("META_PATH:", str(META_PATH))
 
-plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "Arial Unicode MS"]
-plt.rcParams["axes.unicode_minus"] = False
+# plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "Arial Unicode MS"]
+# plt.rcParams["axes.unicode_minus"] = False
 
 # INDEX_PATH = "../jobs_index_demo.parquet"
 # META_PATH  = "../skills_meta_demo.json"
@@ -585,5 +598,6 @@ if run_btn and resume_text.strip():
             st.write("**缺口（岗位技能-你现有）：**", ", ".join(missing[:25]) if missing else "无")
 else:
     st.info("粘贴简历后点击「开始抽取 + 匹配」。")
+
 
 
