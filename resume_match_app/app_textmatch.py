@@ -26,11 +26,11 @@ BASE_DIR = Path(__file__).resolve().parent          # .../resume_match_app
 REPO_DIR = BASE_DIR.parent                          # .../resume-match-demo
 
 INDEX_PARTS = [
-    REPO_DIR / "jobs_index_demo_part1.parquet",
-    REPO_DIR / "jobs_index_demo_part2.parquet",
+    REPO_DIR / "jobs_index_part1.parquet",
+    REPO_DIR / "jobs_index_part2.parquet",
 ]
 
-META_PATH = REPO_DIR / "skills_meta_demo.json"
+META_PATH = REPO_DIR / "skills_meta.json"
 
 st.write("INDEX_PARTS:", [str(p) for p in INDEX_PARTS])
 st.write("META_PATH:", str(META_PATH))
@@ -603,6 +603,7 @@ if run_btn and resume_text.strip():
             st.write("**缺口（岗位技能-你现有）：**", ", ".join(missing[:25]) if missing else "无")
 else:
     st.info("粘贴简历后点击「开始抽取 + 匹配」。")
+
 
 
 
