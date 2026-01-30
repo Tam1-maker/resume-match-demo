@@ -16,9 +16,9 @@ META_PATH  = BASE_DIR / "data" / "skills_meta.json"
 plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "Arial Unicode MS"]
 plt.rcParams["axes.unicode_minus"] = False
 
-INDEX_PATH = r"E:\毕业论文\可视化\jobs_index.parquet"
-META_PATH  = r"E:\毕业论文\可视化\skills_meta.json"
-RULES_PATH = r"E:\毕业论文\outputs_jobcluster_skillbundles_final\skill_bundles_rules.csv"
+INDEX_PATH = "../jobs_index_demo.parquet"
+META_PATH  = "../skills_meta_demo.json"
+RULES_PATH = "..\outputs_jobcluster_skillbundles_final\skill_bundles_rules.csv"
 
 _SPLIT_PAT = re.compile(r"[,\|/;；、\n\r\t ]+")
 PUNCT = re.compile(r"[：:，,。\.！!？?\(\)（）【】\[\]{}<>《》\"“”'’]")
@@ -579,3 +579,4 @@ if run_btn and resume_text.strip():
             st.write("**缺口（岗位技能-你现有）：**", ", ".join(missing[:25]) if missing else "无")
 else:
     st.info("粘贴简历后点击「开始抽取 + 匹配」。")
+
