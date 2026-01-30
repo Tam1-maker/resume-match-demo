@@ -9,16 +9,22 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
-INDEX_PATH = BASE_DIR / "data" / "jobs_index.parquet"
-META_PATH  = BASE_DIR / "data" / "skills_meta.json"
+BASE_DIR = Path(__file__).resolve().parent          # .../resume_match_app
+REPO_DIR = BASE_DIR.parent                          # .../resume-match-demo
+
+INDEX_PATH = REPO_DIR / "jobs_index_demo.parquet"
+META_PATH  = REPO_DIR / "skills_meta_demo.json"
+# RULES_PATH 如果你暂时不用，就先注释；要用再放到仓库里再配
+# RULES_PATH = REPO_DIR / "skill_bundles_rules.csv"
+st.write("INDEX_PATH:", str(INDEX_PATH))
+st.write("META_PATH:", str(META_PATH))
 
 plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "Arial Unicode MS"]
 plt.rcParams["axes.unicode_minus"] = False
 
-INDEX_PATH = "../jobs_index_demo.parquet"
-META_PATH  = "../skills_meta_demo.json"
-RULES_PATH = "..\outputs_jobcluster_skillbundles_final\skill_bundles_rules.csv"
+# INDEX_PATH = "../jobs_index_demo.parquet"
+# META_PATH  = "../skills_meta_demo.json"
+# RULES_PATH = "..\outputs_jobcluster_skillbundles_final\skill_bundles_rules.csv"
 
 _SPLIT_PAT = re.compile(r"[,\|/;；、\n\r\t ]+")
 PUNCT = re.compile(r"[：:，,。\.！!？?\(\)（）【】\[\]{}<>《》\"“”'’]")
@@ -579,4 +585,5 @@ if run_btn and resume_text.strip():
             st.write("**缺口（岗位技能-你现有）：**", ", ".join(missing[:25]) if missing else "无")
 else:
     st.info("粘贴简历后点击「开始抽取 + 匹配」。")
+
 
