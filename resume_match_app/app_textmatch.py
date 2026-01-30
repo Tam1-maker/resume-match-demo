@@ -25,15 +25,34 @@ rcParams["axes.unicode_minus"] = False
 BASE_DIR = Path(__file__).resolve().parent
 REPO_DIR = BASE_DIR.parent
 
-INDEX_PARTS = [
-    REPO_DIR / "jobs_part1.parquet",
-    REPO_DIR / "jobs_part2.parquet",
-]
+st.write("BASE_DIR:", str(BASE_DIR))
+st.write("REPO_DIR:", str(REPO_DIR))
 
-META_PATH = REPO_DIR / "skills_meta.json"
+# 列出仓库根目录文件（最多显示前200个）
+try:
+    root_files = sorted([p.name for p in REPO_DIR.iterdir()])[:200]
+    st.write("ROOT files:", root_files)
+except Exception as e:
+    st.write("list root failed:", e)
 
-st.write("INDEX_PARTS:", [str(p) for p in INDEX_PARTS])
-st.write("META_PATH:", str(META_PATH))
+# 列出 resume_match_app 目录文件
+try:
+    app_files = sorted([p.name for p in BASE_DIR.iterdir()])[:200]
+    st.write("APP files:", app_files)
+except Exception as e:
+    st.write("list app failed:", e)
+
+# 列出 resume_match_app/data 目录文件
+data_dir = BASE_DIR / "data"
+try:
+    if data_dir.exists():
+        data_files = sorted([p.name for p in data_dir.iterdir()])[:200]
+        st.write("DATA files:", data_files)
+    else:
+        st.write("DATA dir not exists:", str(data_dir))
+except Exception as e:
+    st.write("list data failed:", e)
+
 # RULES_PATH 如果你暂时不用，就先注释；要用再放到仓库里再配
 # RULES_PATH = REPO_DIR / "skill_bundles_rules.csv"
 
@@ -202,14 +221,17 @@ def load_jobs_meta():
     dfs = []
     for p in INDEX_PARTS:
         if not p.exists():
+            st.error(f"找不到文件：{p}")
+            st.error(f"候选目录：{[str(x) for x in CAND_DIRS]}")
             raise FileNotFoundError(f"Missing parquet part: {p}")
         dfs.append(pd.read_parquet(p))
+
     jobs = pd.concat(dfs, ignore_index=True)
 
     with open(META_PATH, "r", encoding="utf-8") as f:
         meta = json.load(f)
-
     return jobs, meta
+
 
 
 # ---------- 简历结构化 ----------
@@ -611,6 +633,7 @@ if run_btn and resume_text.strip():
             st.write("**缺口（岗位技能-你现有）：**", ", ".join(missing[:25]) if missing else "无")
 else:
     st.info("粘贴简历后点击「开始抽取 + 匹配」。")
+
 
 
 
