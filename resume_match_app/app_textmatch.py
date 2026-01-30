@@ -22,17 +22,20 @@ else:
 
 rcParams["axes.unicode_minus"] = False
 
-BASE_DIR = Path(__file__).resolve().parent  # /mount/src/.../resume_match_app
+BASE_DIR = Path(__file__).resolve().parent  # .../resume_match_app
 
+# ✅ 你的 parquet 分片就在 resume_match_app/ 下
 INDEX_PARTS = [
     BASE_DIR / "jobs_part1.parquet",
     BASE_DIR / "jobs_part2.parquet",
 ]
 
+# ✅ meta 也在 resume_match_app/ 下
 META_PATH = BASE_DIR / "skills_meta.json"
 
-# （可选）调试打印：确认真的存在
+# （可选）调试：确认路径和文件存在
 import streamlit as st
+st.write("BASE_DIR:", str(BASE_DIR))
 st.write("INDEX_PARTS:", [str(p) for p in INDEX_PARTS])
 st.write("META_PATH:", str(META_PATH))
 # RULES_PATH 如果你暂时不用，就先注释；要用再放到仓库里再配
@@ -200,6 +203,7 @@ def is_noise_token(t: str) -> bool:
 
 @st.cache_data(show_spinner=False)
 def load_jobs_meta():
+    # 读 parquet 分片
     dfs = []
     for p in INDEX_PARTS:
         if not p.exists():
@@ -207,9 +211,14 @@ def load_jobs_meta():
         dfs.append(pd.read_parquet(p))
     jobs = pd.concat(dfs, ignore_index=True)
 
+    # 读 meta
+    if not META_PATH.exists():
+        raise FileNotFoundError(f"Missing meta json: {META_PATH}")
     with open(META_PATH, "r", encoding="utf-8") as f:
         meta = json.load(f)
+
     return jobs, meta
+
 
 
 
@@ -613,6 +622,7 @@ if run_btn and resume_text.strip():
             st.write("**缺口（岗位技能-你现有）：**", ", ".join(missing[:25]) if missing else "无")
 else:
     st.info("粘贴简历后点击「开始抽取 + 匹配」。")
+
 
 
 
