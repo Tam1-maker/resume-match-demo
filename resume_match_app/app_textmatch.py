@@ -22,8 +22,8 @@ else:
 
 rcParams["axes.unicode_minus"] = False
 
-BASE_DIR = Path(__file__).resolve().parent          # .../resume_match_app
-REPO_DIR = BASE_DIR.parent                          # .../resume-match-demo
+BASE_DIR = Path(__file__).resolve().parent
+REPO_DIR = BASE_DIR.parent
 
 INDEX_PARTS = [
     REPO_DIR / "jobs_index_part1.parquet",
@@ -199,10 +199,18 @@ def is_noise_token(t: str) -> bool:
 
 @st.cache_data(show_spinner=False)
 def load_jobs_meta():
-    jobs = pd.read_parquet(INDEX_PATH)
+    dfs = []
+    for p in INDEX_PARTS:
+        if not p.exists():
+            raise FileNotFoundError(f"Missing parquet part: {p}")
+        dfs.append(pd.read_parquet(p))
+    jobs = pd.concat(dfs, ignore_index=True)
+
     with open(META_PATH, "r", encoding="utf-8") as f:
         meta = json.load(f)
+
     return jobs, meta
+
 
 # ---------- 简历结构化 ----------
 def extract_major(text: str) -> str:
@@ -603,6 +611,7 @@ if run_btn and resume_text.strip():
             st.write("**缺口（岗位技能-你现有）：**", ", ".join(missing[:25]) if missing else "无")
 else:
     st.info("粘贴简历后点击「开始抽取 + 匹配」。")
+
 
 
 
